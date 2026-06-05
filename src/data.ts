@@ -71,38 +71,33 @@ export const initialPortfolioData: PortfolioData = {
   timeline: [],
   projects: [],
   skills: [
-    { name: "C", level: 80, category: "technical" },
-    { name: "C++", level: 80, category: "technical" },
-    { name: "Python", level: 80, category: "technical" },
-    { name: "MATLAB", level: 80, category: "technical" },
-    { name: "HTML", level: 75, category: "technical" },
-    { name: "CSS", level: 75, category: "technical" },
-    { name: "Simulink", level: 75, category: "technical" },
-    { name: "Arduino", level: 80, category: "technical" },
-    { name: "ESP32", level: 80, category: "technical" },
-    { name: "Sensor Interfacing", level: 78, category: "technical" },
-    { name: "Motor Drivers", level: 78, category: "technical" },
-    { name: "DC Motor Control", level: 78, category: "technical" },
-    { name: "Breadboard Prototyping", level: 78, category: "technical" },
-    { name: "SolidWorks", level: 78, category: "technical" },
-    { name: "Canva", level: 75, category: "creative" },
-    { name: "Adobe Photoshop", level: 75, category: "creative" },
-    { name: "DaVinci Resolve", level: 75, category: "creative" },
-    { name: "OBS Studio", level: 75, category: "creative" },
-    { name: "Tamil", level: 100, category: "communication" },
-    { name: "English", level: 90, category: "communication" },
-    { name: "Microsoft Word", level: 80, category: "tools" },
-    { name: "Microsoft Excel", level: 80, category: "tools" },
-    { name: "Microsoft PowerPoint", level: 80, category: "tools" },
-    { name: "Google Sheets", level: 80, category: "tools" },
-    { name: "Visual Studio Code (VS Code)", level: 80, category: "tools" },
-    { name: "GitHub", level: 80, category: "tools" }
+    { name: "C", category: "technical" },
+    { name: "C++", category: "technical" },
+    { name: "Python", category: "technical" },
+    { name: "MATLAB", category: "technical" },
+    { name: "HTML", category: "technical" },
+    { name: "CSS", category: "technical" },
+    { name: "Simulink", category: "technical" },
+    { name: "Embedded Systems", category: "technical" },
+    { name: "SolidWorks", category: "technical" },
+    { name: "Canva", category: "creative" },
+    { name: "Adobe Photoshop", category: "creative" },
+    { name: "DaVinci Resolve", category: "creative" },
+    { name: "OBS Studio", category: "creative" },
+    { name: "Tamil", category: "communication" },
+    { name: "English", category: "communication" },
+    { name: "Microsoft Word", category: "tools" },
+    { name: "Microsoft Excel", category: "tools" },
+    { name: "Microsoft PowerPoint", category: "tools" },
+    { name: "Google Sheets", category: "tools" },
+    { name: "Visual Studio Code (VS Code)", category: "tools" },
+    { name: "GitHub", category: "tools" }
   ],
   achievements: [
     {
       id: "a1",
       title: "First Place - MATLAB Cody Contest",
-      issuer: "",
+      issuer: "Department of Mathematics, Kongu Engineering College",
       date: "",
       category: "competition",
       description: ""
@@ -110,7 +105,7 @@ export const initialPortfolioData: PortfolioData = {
     {
       id: "a2",
       title: "Second Place - C Programming Contest",
-      issuer: "",
+      issuer: "KEC Coding Forum, Kongu Engineering College",
       date: "",
       category: "competition",
       description: ""
@@ -118,7 +113,7 @@ export const initialPortfolioData: PortfolioData = {
     {
       id: "a3",
       title: "MATLAB Onramp",
-      issuer: "",
+      issuer: "MATHWORKS",
       date: "",
       category: "certificate",
       description: ""
@@ -126,7 +121,7 @@ export const initialPortfolioData: PortfolioData = {
     {
       id: "a4",
       title: "Simulink Onramp",
-      issuer: "",
+      issuer: "MATHWORKS",
       date: "",
       category: "certificate",
       description: ""
@@ -134,7 +129,7 @@ export const initialPortfolioData: PortfolioData = {
     {
       id: "a5",
       title: "SolidWorks Training & Certification",
-      issuer: "",
+      issuer: "Department of Mechatronics Engineering, Kongu Engineering College (Non-Formal)",
       date: "",
       category: "certificate",
       description: ""
@@ -190,5 +185,20 @@ export const initialPortfolioData: PortfolioData = {
       skillsLearned: []
     }
   ],
-  gallery: []
+  gallery: [
+    {
+      id: "g1",
+      url: "/gallery/Scientium.JPG",
+      caption: "Scientium",
+      category: "leadership",
+      date: ""
+    },
+    {
+      id: "g2",
+      url: "/gallery/Dheepesh.JPG",
+      caption: "Dheepesh",
+      category: "Personal",
+      date: ""
+    }
+  ]
 };

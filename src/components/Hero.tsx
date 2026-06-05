@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "motion/react";
-import { ArrowRight, ChevronDown, Award, Github, Linkedin, Briefcase, Zap } from "lucide-react";
+import { ArrowRight, Github, Instagram, Linkedin, Briefcase } from "lucide-react";
 
 interface HeroProps {
   name: string;
@@ -8,12 +8,13 @@ interface HeroProps {
   subTaglines: string[];
   intro: string;
   github: string;
+  instagram: string;
   linkedin: string;
   hasJourney: boolean;
   hasProjects: boolean;
 }
 
-export default function Hero({ name, tagline, subTaglines, intro, github, linkedin, hasJourney, hasProjects }: HeroProps) {
+export default function Hero({ name, tagline, subTaglines, intro, github, instagram, linkedin, hasJourney, hasProjects }: HeroProps) {
   
   const handleScrollTo = (sectionId: string) => {
     const el = document.getElementById(sectionId);
@@ -66,7 +67,7 @@ export default function Hero({ name, tagline, subTaglines, intro, github, linked
           transition={{ duration: 0.6, delay: 0.2 }}
           className="space-y-4"
         >
-          <h1 className="text-4xl sm:text-6xl md:text-8xl font-sans font-bold tracking-tight text-white mb-2 leading-none">
+          <h1 className="text-4xl sm:text-6xl md:text-8xl font-sans font-bold tracking-tight text-white mb-5 sm:mb-6 leading-none">
             {name}
           </h1>
           
@@ -143,7 +144,7 @@ export default function Hero({ name, tagline, subTaglines, intro, github, linked
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.6 }}
-          className="flex items-center justify-center space-x-6 pt-4"
+          className="flex flex-wrap items-center justify-center gap-6 pt-4 pb-16 sm:pb-4"
         >
           {github && (
             <a
@@ -167,18 +168,18 @@ export default function Hero({ name, tagline, subTaglines, intro, github, linked
               <Linkedin className="w-4 h-4" />
             </a>
           )}
-          <div className="h-4 w-px bg-zinc-800"></div>
-          <div className="flex items-center space-x-2 text-[11px] font-mono text-zinc-500">
-            <Zap className="w-3.5 h-3.5 text-emerald-500 animate-bounce" />
-            <span>Built with React + Vite</span>
-          </div>
+          {instagram && (
+            <a
+              href={instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2.5 rounded-full bg-zinc-900 border border-zinc-850 text-zinc-400 hover:text-pink-400 hover:border-zinc-700 transition-all active:scale-90 hover-pop-soft hover-pop-icon"
+              title="Instagram Profile"
+            >
+              <Instagram className="w-4 h-4" />
+            </a>
+          )}
         </motion.div>
-      </div>
-
-      {/* Floating Sparkle Elements */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center space-y-1 text-zinc-500 cursor-pointer opacity-80 hover:opacity-100 transition-opacity hover-pop-soft" onClick={() => handleScrollTo("about")}>
-        <span className="text-[10px] font-mono tracking-widest uppercase">Scroll Down</span>
-        <ChevronDown className="w-4 h-4 animate-bounce" />
       </div>
     </section>
   );

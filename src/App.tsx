@@ -67,6 +67,7 @@ export default function App() {
           subTaglines={portfolio.personal.subTaglines}
           intro={portfolio.personal.intro}
           github={portfolio.personal.github}
+          instagram={portfolio.personal.instagram}
           linkedin={portfolio.personal.linkedin}
           hasJourney={hasJourney}
           hasProjects={hasProjects}

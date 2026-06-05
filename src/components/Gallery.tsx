@@ -10,7 +10,7 @@ interface GalleryProps {
 export default function Gallery({ galleryItems }: GalleryProps) {
   const [selectedCat, setSelectedCat] = useState<string>("all");
 
-  const categories = ["all", "Hackathons", "Seminars", "Teamwork", "Personal"];
+  const categories = ["all", "leadership", "Hackathons", "Seminars", "Teamwork", "Personal"];
 
   const filteredItems = selectedCat === "all"
     ? galleryItems
@@ -70,7 +70,6 @@ export default function Gallery({ galleryItems }: GalleryProps) {
                 transition={{ duration: 0.4, delay: idx * 0.04 }}
                 className="group relative h-64 rounded-xl overflow-hidden bg-zinc-900 border border-zinc-855 hover:border-zinc-800 transition-all shadow-inner cursor-pointer hover-pop hover-pop-card"
               >
-                {/* Core Unsplash Asset */}
                 <img
                   src={item.url}
                   alt={item.caption}

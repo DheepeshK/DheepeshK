@@ -24,7 +24,6 @@ export interface Project {
 
 export interface Skill {
   name: string;
-  level: number; // 1-100 indicating confidence
   category: "technical" | "creative" | "leadership" | "communication" | "tools";
 }
 
@@ -52,7 +51,7 @@ export interface MemoryItem {
   id: string;
   url: string;
   caption: string;
-  category: "Hackathons" | "Seminars" | "Teamwork" | "Personal";
+  category: "leadership" | "Hackathons" | "Seminars" | "Teamwork" | "Personal";
   date: string;
 }
 
