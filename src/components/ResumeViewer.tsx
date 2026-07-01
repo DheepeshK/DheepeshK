@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X, Printer, Mail, Phone, MapPin, Briefcase, GraduationCap } from "lucide-react";
 import { PortfolioData } from "../data";
@@ -17,10 +17,12 @@ export default function ResumeViewer({ isOpen, onClose, portfolio }: ResumeViewe
   };
 
   const skillGroups = [
-    { label: "Engineering", items: portfolio.skills.filter((skill) => skill.category === "technical").slice(0, 6) },
-    { label: "Design & Media", items: portfolio.skills.filter((skill) => skill.category === "creative").slice(0, 4) },
-    { label: "Communication", items: portfolio.skills.filter((skill) => skill.category === "communication").slice(0, 4) },
-    { label: "Tools", items: portfolio.skills.filter((skill) => skill.category === "tools").slice(0, 5) },
+    { label: "Programming", items: portfolio.skills.filter((skill) => skill.category === "programming").slice(0, 6) },
+    { label: "Engineering", items: portfolio.skills.filter((skill) => skill.category === "engineering").slice(0, 4) },
+    { label: "Design", items: portfolio.skills.filter((skill) => skill.category === "design").slice(0, 4) },
+    { label: "Dev Tools", items: portfolio.skills.filter((skill) => skill.category === "devtools").slice(0, 4) },
+    { label: "Productivity", items: portfolio.skills.filter((skill) => skill.category === "productivity").slice(0, 5) },
+    { label: "Leadership", items: portfolio.skills.filter((skill) => skill.category === "leadership").slice(0, 4) },
   ].filter((group) => group.items.length > 0);
 
   return (
@@ -33,31 +35,31 @@ export default function ResumeViewer({ isOpen, onClose, portfolio }: ResumeViewe
             exit={{ opacity: 0, scale: 0.96 }}
             className="w-full max-w-4xl h-[90vh] rounded-2xl bg-zinc-900 border border-zinc-800 shadow-2xl flex flex-col justify-between overflow-hidden text-left"
           >
-            <div className="px-6 py-4 border-b border-zinc-850 flex items-center justify-between bg-zinc-900/60 z-10">
+            <div className="px-6 py-4 border-b border-zinc-900 flex items-center justify-between bg-zinc-900/60 z-10">
               <div className="space-y-0.5">
                 <h3 className="text-base sm:text-lg font-sans font-extrabold text-white">
                   Resume Preview
                 </h3>
                 <p className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">
-                  Preview and export a printable resume
+                  Preview and print your resume
                 </p>
               </div>
 
               <div className="flex items-center space-x-2">
                 <button
                   onClick={handlePrint}
-                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-zinc-800 hover:bg-zinc-750 text-zinc-200 border border-zinc-700 hover:border-zinc-650 transition-all cursor-pointer active:scale-95"
+                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-zinc-800 hover:bg-zinc-800 text-zinc-200 border border-zinc-700 hover:border-zinc-700 transition-all cursor-pointer active:scale-95"
                   title="Open print dialog"
                   id="print-resume-btn"
                 >
-                  <Printer className="w-3.5 h-3.5 text-emerald-450" />
-                  <span>Print / Save PDF</span>
+                  <Printer className="w-3.5 h-3.5 text-emerald-500" />
+                  <span>Print or Save PDF</span>
                 </button>
 
                 <button
                   onClick={onClose}
-                  className="p-1.5 rounded-lg bg-zinc-800 border border-zinc-750 text-zinc-400 hover:text-white hover:border-zinc-700"
-                  title="Close Resume Preview"
+                  className="p-1.5 rounded-lg bg-zinc-800 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700"
+                  aria-label="Close Resume Preview"
                   id="close-resume-btn"
                 >
                   <X className="w-4 h-4" />
@@ -151,7 +153,7 @@ export default function ResumeViewer({ isOpen, onClose, portfolio }: ResumeViewe
 
                     <div className="space-y-3">
                       <h2 className="text-[11px] font-mono font-bold tracking-widest text-zinc-800 uppercase border-b border-zinc-300 pb-1">
-                        <span>Skills Matrix</span>
+                          <span>Skills</span>
                       </h2>
 
                       <div className="space-y-2.5">
@@ -172,12 +174,12 @@ export default function ResumeViewer({ isOpen, onClose, portfolio }: ResumeViewe
                           <span>Credentials</span>
                         </h2>
 
-                        <ul className="space-y-1.5 text-[10px] text-zinc-750">
+                        <ul className="space-y-1.5 text-[10px] text-zinc-800">
                           {portfolio.achievements.map((achievement) => (
                             <li key={achievement.id} className="leading-tight">
                               <span className="font-extrabold text-zinc-900 block">{achievement.title}</span>
                               {achievement.issuer && (
-                                <span className="text-[9px] font-mono text-zinc-650 block mb-1">{achievement.issuer}</span>
+                                <span className="text-[9px] font-mono text-zinc-700 block mb-1">{achievement.issuer}</span>
                               )}
                             </li>
                           ))}
@@ -191,7 +193,7 @@ export default function ResumeViewer({ isOpen, onClose, portfolio }: ResumeViewe
                       <div className="space-y-4">
                         <h2 className="text-[11px] font-mono font-bold tracking-widest text-zinc-800 uppercase border-b border-zinc-300 pb-1 flex items-center gap-1">
                           <Briefcase className="w-3.5 h-3.5 text-zinc-500" />
-                          <span>Work & Leadership</span>
+                          <span>Experience</span>
                         </h2>
 
                         <div className="space-y-4">
@@ -226,7 +228,7 @@ export default function ResumeViewer({ isOpen, onClose, portfolio }: ResumeViewe
                     {portfolio.projects.length > 0 && (
                       <div className="space-y-4">
                         <h2 className="text-[11px] font-mono font-bold tracking-widest text-zinc-800 uppercase border-b border-zinc-300 pb-1">
-                          <span>Featured Labs & Projects</span>
+                          <span>Projects</span>
                         </h2>
 
                         <div className="space-y-3">
@@ -238,8 +240,8 @@ export default function ResumeViewer({ isOpen, onClose, portfolio }: ResumeViewe
                               <p className="text-[10px] text-zinc-700 leading-normal">
                                 {project.description}
                               </p>
-                              <p className="text-[9px] font-medium text-zinc-550 italic">
-                                Goal / Metrics: {project.problem} Impacting: {project.impact}
+                              <p className="text-[9px] font-medium text-zinc-600 italic">
+                                Problem: {project.problem} | Impact: {project.impact}
                               </p>
                             </div>
                           ))}
@@ -250,15 +252,15 @@ export default function ResumeViewer({ isOpen, onClose, portfolio }: ResumeViewe
                 </div>
 
                 <div className="border-t border-zinc-200 pt-3 mt-6 text-center text-[8px] font-mono text-zinc-400 uppercase tracking-widest flex items-center justify-between">
-                  <span>Resume generated from portfolio content</span>
-                  <span>Prepared for sharing and print</span>
+                  <span>Portfolio Resume</span>
+                  <span>Generated from portfolio data</span>
                 </div>
               </div>
             </div>
 
-            <div className="px-6 py-3 border-t border-zinc-850 bg-zinc-950 text-[10px] font-mono text-zinc-500 flex items-center justify-between">
-              <span>* Designed for standard A4 Single Page configurations</span>
-              <span className="text-emerald-400 font-bold">Save as PDF inside the print dialog!</span>
+            <div className="px-6 py-3 border-t border-zinc-900 bg-zinc-950 text-[10px] font-mono text-zinc-500 flex items-center justify-between">
+              <span>Designed for standard A4 single-page layout</span>
+              <span className="text-emerald-400 font-bold">Use browser print dialog to save as PDF</span>
             </div>
           </motion.div>
         </div>

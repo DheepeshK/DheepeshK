@@ -1,125 +1,330 @@
-import React, { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Skill } from "../types";
-import { Settings, Code, BrainCircuit, Users, MessageSquare, Zap } from "lucide-react";
+import {
+  Terminal, FileCode, Sigma, Globe, PaintbrushVertical,
+  GitBranch, Cpu, Box, Palette, Image, Video, Camera,
+  FileText, FileSpreadsheet, Presentation,
+  Table2, CodeXml, Github, Zap, Code,
+  Users, Target, Settings, Sparkles, Wrench,
+  PenTool, Layout, HardDrive
+} from "lucide-react";
+
+type LucideIcon = typeof Terminal;
 
 interface SkillsGridProps {
   skills: Skill[];
 }
 
-const getSkillMark = (skillName: string) => {
-  const compactName = skillName.replace(/[^A-Za-z0-9+]/g, "");
-  if (compactName.length > 0 && compactName.length <= 4) {
-    return compactName.toUpperCase();
+const skillIconMap: Record<string, LucideIcon> = {
+  "C": Terminal,
+  "C++": Terminal,
+  "Python": FileCode,
+  "MATLAB": Sigma,
+  "HTML": Globe,
+  "CSS": PaintbrushVertical,
+  "SolidWorks": Box,
+  "Embedded Systems": Cpu,
+  "Simulink": GitBranch,
+  "Canva": Palette,
+  "Adobe Photoshop": Image,
+  "DaVinci Resolve": Video,
+  "OBS Studio": Camera,
+  "Visual Studio Code (VS Code)": CodeXml,
+  "GitHub": Github,
+  "Microsoft Word": FileText,
+  "Microsoft Excel": FileSpreadsheet,
+  "Microsoft PowerPoint": Presentation,
+  "Google Sheets": Table2,
+  "Event Management": Users,
+  "Team Coordination": Users,
+  "Public Speaking": Target,
+  "Planning & Execution": Wrench,
+};
+
+const categoryConfig = {
+  programming: {
+    label: "Programming",
+    icon: Code,
+    gradient: "from-emerald-500/10 via-cyan-500/5 to-transparent",
+    borderGlow: "shadow-emerald-500/20",
+    iconBg: "from-emerald-400 to-cyan-400",
+    badge: "text-emerald-400 border-emerald-500/30",
+    glow: "bg-emerald-500/10"
+  },
+  engineering: {
+    label: "Engineering",
+    icon: HardDrive,
+    gradient: "from-blue-500/10 via-cyan-500/5 to-transparent",
+    borderGlow: "shadow-blue-500/20",
+    iconBg: "from-blue-400 to-cyan-400",
+    badge: "text-blue-400 border-blue-500/30",
+    glow: "bg-blue-500/10"
+  },
+  design: {
+    label: "Design & Creativity",
+    icon: PenTool,
+    gradient: "from-orange-500/10 via-amber-500/5 to-transparent",
+    borderGlow: "shadow-orange-500/20",
+    iconBg: "from-orange-400 to-amber-400",
+    badge: "text-orange-400 border-orange-500/30",
+    glow: "bg-orange-500/10"
+  },
+  devtools: {
+    label: "Development Tools",
+    icon: CodeXml,
+    gradient: "from-fuchsia-500/10 via-pink-500/5 to-transparent",
+    borderGlow: "shadow-fuchsia-500/20",
+    iconBg: "from-fuchsia-400 to-pink-400",
+    badge: "text-fuchsia-400 border-fuchsia-500/30",
+    glow: "bg-fuchsia-500/10"
+  },
+  productivity: {
+    label: "Productivity",
+    icon: Layout,
+    gradient: "from-teal-500/10 via-lime-500/5 to-transparent",
+    borderGlow: "shadow-teal-500/20",
+    iconBg: "from-teal-400 to-lime-400",
+    badge: "text-teal-400 border-teal-500/30",
+    glow: "bg-teal-500/10"
+  },
+  leadership: {
+    label: "Leadership",
+    icon: Users,
+    gradient: "from-sky-500/10 via-indigo-500/5 to-transparent",
+    borderGlow: "shadow-sky-500/20",
+    iconBg: "from-sky-400 to-indigo-400",
+    badge: "text-sky-400 border-sky-500/30",
+    glow: "bg-sky-500/10"
   }
+} as const;
 
-  const initials = skillName
-    .split(/[^A-Za-z0-9+]+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("");
+const tabs = [
+  { value: "programming" as const, label: "Programming" },
+  { value: "engineering" as const, label: "Engineering" },
+  { value: "design" as const, label: "Design & Creativity" },
+  { value: "devtools" as const, label: "Dev Tools" },
+  { value: "productivity" as const, label: "Productivity" },
+  { value: "leadership" as const, label: "Leadership" }
+];
 
-  return initials || skillName.slice(0, 2).toUpperCase();
-};
-
-const categoryAccent: Record<Skill["category"], string> = {
-  technical: "from-cyan-400/20 via-emerald-400/15 to-cyan-400/5 border-emerald-500/20",
-  creative: "from-orange-400/20 via-amber-300/15 to-orange-400/5 border-orange-400/20",
-  leadership: "from-sky-400/20 via-indigo-400/15 to-sky-400/5 border-sky-400/20",
-  communication: "from-teal-400/20 via-lime-300/15 to-teal-400/5 border-teal-400/20",
-  tools: "from-fuchsia-400/20 via-pink-400/15 to-fuchsia-400/5 border-fuchsia-400/20"
-};
-
-export default function SkillsGrid({ skills }: SkillsGridProps) {
-  const [activeTab, setActiveTab] = useState<"technical" | "creative" | "leadership" | "communication" | "tools">("technical");
-
-  const tabs = [
-    { value: "technical", label: "Technical Skills", icon: <Code className="w-4 h-4" /> },
-    { value: "creative", label: "Creative Skills", icon: <BrainCircuit className="w-4 h-4" /> },
-    { value: "leadership", label: "Leadership Core", icon: <Users className="w-4 h-4" /> },
-    { value: "communication", label: "Communication", icon: <MessageSquare className="w-4 h-4" /> },
-    { value: "tools", label: "Tools & Apps", icon: <Settings className="w-4 h-4" /> }
-  ] as const;
-
-  const currentSkills = skills.filter((s) => s.category === activeTab);
+function FloatingParticles() {
+  const particles = useMemo(() =>
+    Array.from({ length: 20 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: Math.random() * 4 + 1,
+      duration: Math.random() * 10 + 10,
+      delay: Math.random() * 5,
+      color: ["rgba(52,211,153,0.3)", "rgba(251,146,60,0.2)", "rgba(56,189,248,0.2)", "rgba(232,121,249,0.2)"][i % 4],
+    })), []);
 
   return (
-    <section id="skills" className="py-18 md:py-20 bg-zinc-950 relative border-t border-zinc-900 overflow-hidden">
-      {/* Background glow overlay */}
-      <div className="absolute left-1/4 bottom-10 w-96 h-96 bg-purple-500/5 rounded-full filter blur-[120px]"></div>
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {particles.map((p) => (
+        <motion.div
+          key={p.id}
+          className="absolute rounded-full"
+          style={{
+            width: p.size,
+            height: p.size,
+            background: p.color,
+            left: `${p.x}%`,
+            top: `${p.y}%`,
+          }}
+          animate={{
+            y: [0, -30, 0, 20, 0],
+            x: [0, 15, -10, 5, 0],
+            opacity: [0.2, 0.7, 0.3, 0.6, 0.2],
+          }}
+          transition={{
+            duration: p.duration,
+            repeat: Infinity,
+            delay: p.delay,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
-      <div className="max-w-6xl mx-auto px-4 md:px-8">
-        
-        {/* Section Heading & Subheading */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 text-left" id="skills-title">
-          <div>
-            <div className="inline-flex items-center space-x-2 text-emerald-400 font-mono text-xs tracking-wider uppercase mb-3">
-              <Zap className="w-3.5 h-3.5" />
-              <span>Skill Matrix Capabilities</span>
+function SkillCard({ skill, index }: { skill: Skill; index: number; key?: string }) {
+  const config = categoryConfig[skill.category];
+  const Icon = skillIconMap[skill.name] ?? Code;
+
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 30, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -20, scale: 0.9 }}
+      transition={{
+        type: "spring",
+        stiffness: 200,
+        damping: 20,
+        delay: index * 0.06,
+      }}
+      whileHover={{ y: -8, scale: 1.03 }}
+      className="group relative"
+    >
+      <div className={`
+        relative rounded-2xl border border-zinc-800/80 bg-gradient-to-br ${config.gradient}
+        p-5 h-full backdrop-blur-sm overflow-hidden
+        transition-all duration-300
+        hover:border-zinc-700 hover:shadow-2xl ${config.borderGlow}
+      `}>
+        <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${config.glow} blur-xl`} />
+
+        <div className="relative flex flex-col items-start gap-4">
+          <div className="relative">
+            <div className={`
+              flex h-14 w-14 items-center justify-center rounded-xl
+              bg-gradient-to-br ${config.iconBg} shadow-lg
+              transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl
+            `}>
+              <Icon className="w-6 h-6 text-white" />
             </div>
-            <h2 className="text-3xl md:text-5xl font-sans font-bold text-white tracking-tight">
-              My Skills & Competencies
-            </h2>
-            <div className="h-1 w-20 bg-emerald-500 mt-4 rounded-full"></div>
+            <motion.div
+              className={`absolute -inset-1 rounded-xl bg-gradient-to-br ${config.iconBg} opacity-30 blur-md`}
+              animate={{ opacity: [0.2, 0.5, 0.2] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            />
           </div>
-          <p className="max-w-xs text-zinc-460 text-xs md:text-sm mt-4 md:mt-0 leading-relaxed font-sans font-normal">
-            A comprehensive visual index charting technical literacy, creative versatility, and teamwork systems.
-          </p>
-        </div>
 
-        {/* Tab Controls Navigation */}
-        <div className="flex flex-wrap items-center gap-1 mb-10 border-b border-zinc-850 pb-2" id="skills-tabs">
-          <div className="flex flex-wrap items-center gap-1">
+          <div className="space-y-2">
+            <span className={`
+              inline-block px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider
+              border ${config.badge} bg-zinc-950/50
+            `}>
+              {config.label}
+            </span>
+            <h3 className="text-sm md:text-base font-bold text-zinc-100 leading-tight">
+              {skill.name}
+            </h3>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+export default function SkillsGrid({ skills }: SkillsGridProps) {
+  const [activeTab, setActiveTab] = useState<Skill["category"]>("programming");
+
+  const currentSkills = skills.filter((s) => s.category === activeTab);
+  const config = categoryConfig[activeTab];
+  const TabIcon = config.icon;
+
+  return (
+    <section
+      id="skills"
+      className="py-20 md:py-28 relative border-t border-zinc-900 overflow-hidden"
+    >
+      <FloatingParticles />
+
+      <div className="max-w-6xl mx-auto px-4 md:px-8 relative">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          className="flex flex-col md:flex-row md:items-end justify-between mb-14"
+        >
+          <div>
+            <div className="inline-flex items-center gap-2 text-emerald-400 font-mono text-xs tracking-wider uppercase mb-3">
+              <Zap className="w-3.5 h-3.5" />
+              <span>Skills &amp; Expertise</span>
+            </div>
+            <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight">
+              Skills{" "}
+              <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+                &amp; Expertise
+              </span>
+            </h2>
+            <div className="h-1 w-24 bg-gradient-to-r from-emerald-500 to-cyan-500 mt-4 rounded-full" />
+          </div>
+          <p className="max-w-xs text-zinc-500 text-xs md:text-sm mt-4 md:mt-0 leading-relaxed">
+            Technologies, tools, and creative mediums I work with.
+          </p>
+        </motion.div>
+
+        <div className="flex flex-wrap items-center gap-2 mb-10">
+          <div className="flex p-1 bg-zinc-900/60 rounded-xl border border-zinc-800/50 backdrop-blur-sm">
             {tabs.map((tab) => {
               const isActive = activeTab === tab.value;
+              const tabConfig = categoryConfig[tab.value];
+              const TIcon = tabConfig.icon;
               return (
                 <button
                   key={tab.value}
                   onClick={() => setActiveTab(tab.value)}
-                  className={`flex items-center space-x-2 px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all cursor-pointer hover-pop-soft ${
-                    isActive
-                      ? "bg-zinc-900 text-emerald-400 border border-zinc-800 shadow-md shadow-emerald-500/5"
-                      : "text-zinc-500 hover:text-zinc-350 bg-transparent border border-transparent"
-                  }`}
+                  className={`
+                    relative flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wide
+                    transition-all duration-300 cursor-pointer
+                    ${isActive
+                      ? "text-zinc-950"
+                      : "text-zinc-400 hover:text-zinc-200"
+                    }
+                  `}
                 >
-                  {tab.icon}
-                  <span>{tab.label}</span>
+                  {isActive && (
+                    <motion.div
+                      layoutId="tab-bg"
+                      className={`absolute inset-0 rounded-lg bg-gradient-to-r ${tabConfig.iconBg}`}
+                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative flex items-center gap-2">
+                    <TIcon className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">{tab.label}</span>
+                  </span>
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* Skills Layout Grid container */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5" id="skills-list">
-          <AnimatePresence mode="popLayout">
-            {currentSkills.map((skill) => (
-              <motion.div
-                key={skill.name}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className={`rounded-2xl border bg-gradient-to-br ${categoryAccent[skill.category]} p-4 md:p-5 transition-all shadow-inner hover:border-zinc-700/80 hover-pop hover-pop-card`}
-              >
-                <div className="flex flex-col items-start gap-4">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-zinc-950/70 text-sm font-black uppercase tracking-[0.18em] text-white shadow-[0_12px_30px_rgba(0,0,0,0.22)]">
-                    {getSkillMark(skill.name)}
-                  </div>
-                  <div className="space-y-1">
-                    <span className="block text-[10px] font-mono uppercase tracking-[0.22em] text-zinc-500">
-                      {tabs.find((tab) => tab.value === skill.category)?.label}
-                    </span>
-                    <span className="block text-sm md:text-base font-semibold leading-snug text-zinc-100">
-                      {skill.name}
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
+        <motion.div
+          key={activeTab}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="flex items-center gap-3 mb-8">
+            <div className={`
+              flex h-8 w-8 items-center justify-center rounded-lg
+              bg-gradient-to-br ${config.iconBg}
+            `}>
+              <TabIcon className="w-4 h-4 text-white" />
+            </div>
+            <span className="text-zinc-400 text-sm">
+              Showing <strong className="text-zinc-200">{currentSkills.length}</strong> {config.label.toLowerCase()}
+            </span>
+          </div>
 
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
+            <AnimatePresence mode="popLayout">
+              {currentSkills.map((skill, i) => (
+                <SkillCard key={skill.name} skill={skill} index={i} />
+              ))}
+            </AnimatePresence>
+          </div>
+        </motion.div>
+
+        {currentSkills.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center py-20"
+          >
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-800 mb-4">
+              <Sparkles className="w-6 h-6 text-zinc-600" />
+            </div>
+            <p className="text-zinc-500 text-sm">No skills in this category yet.</p>
+          </motion.div>
+        )}
       </div>
     </section>
   );

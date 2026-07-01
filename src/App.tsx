@@ -3,10 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { initialPortfolioData, PortfolioData } from "./data";
 import { NavigationItem } from "./types";
 
+import AnimatedBg from "./components/AnimatedBg";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import About from "./components/About";
@@ -54,6 +55,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 selection:bg-emerald-500/30 selection:text-emerald-300 font-sans transition-colors duration-300">
+      <AnimatedBg colors={["#34d399", "#6366f1", "#2dd4bf"]} />
       <Header
         name={portfolio.personal.name}
         navigationItems={navigationItems}
@@ -126,12 +128,12 @@ export default function App() {
 
       <footer className="py-12 bg-zinc-950 border-t border-zinc-900 text-center text-xs text-zinc-500 font-mono">
         <div className="max-w-7xl mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p>© 2026 {portfolio.personal.name}. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} {portfolio.personal.name}. All rights reserved.</p>
           <button
             onClick={() => setIsResumeOpen(true)}
-            className="hover:text-emerald-400 transition-colors cursor-pointer hover-pop-soft"
+            className="hover:text-emerald-400 transition-colors cursor-pointer"
           >
-            [ DOWNLOAD RESUME PDF ]
+            Download Resume (PDF)
           </button>
         </div>
       </footer>

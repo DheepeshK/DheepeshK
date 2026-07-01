@@ -24,7 +24,7 @@ export interface Project {
 
 export interface Skill {
   name: string;
-  category: "technical" | "creative" | "leadership" | "communication" | "tools";
+  category: "programming" | "engineering" | "design" | "devtools" | "productivity" | "leadership";
 }
 
 export interface Achievement {
@@ -52,15 +52,6 @@ export interface MemoryItem {
   url: string;
   caption: string;
   category: "leadership" | "Hackathons" | "Seminars" | "Teamwork" | "Personal";
-  date: string;
-}
-
-export interface Message {
-  id: string;
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
   date: string;
 }
 
